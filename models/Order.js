@@ -9,7 +9,6 @@ const OrderSchema = new Schema(
     },
     phoneNumber: {
       type: String,
-      match: /^[0][0-9]{9}$/,
       required: true,
     },
     totalAmount: {

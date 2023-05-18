@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const connectDB = require("./config/database");
 const cors = require("cors");
 const path = require("path");
+const ejs = require('ejs');
 
 const paypal = require("paypal-rest-sdk");
 
@@ -75,6 +76,8 @@ app.post(
     let id_order;
     const { address, phoneNumber, carts } = req.body;
     globalAddress = address;
+    console.log("cartd: ");
+    console.log(carts);
     // Simple validation
     if (!carts) {
       return next(new ErrorResponse(400, "Lack of information"));
@@ -298,7 +301,7 @@ app.get("/api/success", (req, res) => {
         let bd = {
           address: globalAddress || address,
           payment_method: "onPaypal",
-          statusPayment: 2,
+          paymentStatus: 2,
         };
 
         let newOrder = await orderModel.findByIdAndUpdate(id_order, bd, {
@@ -309,7 +312,6 @@ app.get("/api/success", (req, res) => {
         //   abc: payment.transactions[0].item_list?.items,
         //   order: newOrder,
         // });
-        // console.log("server: " + payment?.transactions?.item_list);
         res.render("success", {
           data: {
             payment: payment.transactions[0].item_list.items,
